@@ -15,10 +15,10 @@ class ListData extends StatefulWidget {
 }
 
 class _ListDataState extends State<ListData> {
-  List<Map<String, String>> dataMahasiswa = [];
+  List<Map<String, String>> dataBarang = [];
   String url = Platform.isAndroid
-      ? 'http://192.168.1.7/belajarflutter/index.php'
-      : 'http://localhost/belajarflutter/index.php';
+      ? 'http://10.98.5.105/uasmobile/index.php'
+      : 'http://localhost/uasmobile/index.php';
   @override
   void initState() {
     super.initState();
@@ -30,10 +30,11 @@ class _ListDataState extends State<ListData> {
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       setState(() {
-        dataMahasiswa = List<Map<String, String>>.from(data.map((item) {
+        dataBarang = List<Map<String, String>>.from(data.map((item) {
           return {
             'nama': item['nama'] as String,
-            'jurusan': item['jurusan'] as String,
+            'jumlah': item['jumlah'] as String,
+            'harga': item['harga'] as String,
             'id': item['id'] as String,
           };
         }));
@@ -52,12 +53,12 @@ class _ListDataState extends State<ListData> {
     }
   }
 
-  lihatMahasiswa(String id, String nama, String jurusan) {
+  lihatBarang(String id, String nama, String jumlah, String harga) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Detail Mahasiswa'),
+            title: Text('Detail Barang'),
             content: Container(
               height: 100.0,
               width: 400.0,
@@ -71,7 +72,10 @@ class _ListDataState extends State<ListData> {
                     child: Text('Nama : $nama'),
                   ),
                   Container(
-                    child: Text('Jurusan : $jurusan'),
+                    child: Text('jumlah : $jumlah'),
+                  ),
+                  Container(
+                    child: Text('harga : $harga'),
                   ),
                 ],
               ),
@@ -84,7 +88,7 @@ class _ListDataState extends State<ListData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List Data Mahasiswa'),
+        title: const Text('Daftar Belanja'),
       ),
       drawer: const SideMenu(),
       body: Column(
@@ -97,25 +101,26 @@ class _ListDataState extends State<ListData> {
                     builder: ((context) => const TambahData()),
                   ));
             },
-            child: const Text('Tambah Data Mahasiswa'),
+            child: const Text('Tambah Data Barang'),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: dataMahasiswa.length,
+              itemCount: dataBarang.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(dataMahasiswa[index]['nama']!),
-                  subtitle: Text('Jurusan: ${dataMahasiswa[index]['jurusan']}'),
+                  title: Text(dataBarang[index]['nama']!),
+                  subtitle: Text('Jumlah: ${dataBarang[index]['jumlah']}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       IconButton(
                         icon: const Icon(Icons.visibility),
                         onPressed: () {
-                          lihatMahasiswa(
-                              dataMahasiswa[index]['id']!,
-                              dataMahasiswa[index]['nama']!,
-                              dataMahasiswa[index]['jurusan']!);
+                          lihatBarang(
+                              dataBarang[index]['id']!,
+                              dataBarang[index]['nama']!,
+                              dataBarang[index]['jumlah']!,
+                              dataBarang[index]['harga']!);
                         },
                       ),
                       IconButton(
@@ -125,17 +130,19 @@ class _ListDataState extends State<ListData> {
                               context,
                               MaterialPageRoute(
                                 builder: ((context) => UpdateData(
-                                    id: dataMahasiswa[index]['id']!,
-                                    nama: dataMahasiswa[index]['nama']!,
-                                    jurusan: dataMahasiswa[index]['jurusan']!,
-                                    url: url)),
+                                      id: dataBarang[index]['id']!,
+                                      nama: dataBarang[index]['nama']!,
+                                      jumlah: dataBarang[index]['jumlah']!,
+                                      url: url,
+                                      harga: dataBarang[index]['harga']!,
+                                    )),
                               ));
                         },
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () {
-                          deleteData(int.parse(dataMahasiswa[index]['id']!))
+                          deleteData(int.parse(dataBarang[index]['id']!))
                               .then((result) {
                             if (result['pesan'] == 'berhasil') {
                               showDialog(
@@ -143,7 +150,7 @@ class _ListDataState extends State<ListData> {
                                   builder: (context) {
                                     return AlertDialog(
                                       title:
-                                          const Text('Data berhasil di hapus'),
+                                          const Text('Data berhasil dihapus'),
                                       content: const Text('ok'),
                                       actions: [
                                         TextButton(

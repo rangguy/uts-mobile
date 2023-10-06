@@ -7,14 +7,16 @@ import 'package:http/http.dart' as http;
 class UpdateData extends StatefulWidget {
   final String id;
   final String nama;
-  final String jurusan;
+  final String jumlah;
+  final String harga;
   final String url;
   const UpdateData(
       {super.key,
       required this.id,
       required this.nama,
-      required this.jurusan,
-      required this.url});
+      required this.jumlah,
+      required this.url,
+      required this.harga});
   @override
   _UpdateData createState() => _UpdateData(url: url);
 }
@@ -23,13 +25,19 @@ class _UpdateData extends State<UpdateData> {
   String url;
   _UpdateData({required this.url});
   final _namaController = TextEditingController();
-  final _jurusanController = TextEditingController();
+  final _jumlahController = TextEditingController();
+  final _hargaController = TextEditingController();
 
-  Future<void> updateData(String nama, String jurusan, String id) async {
+  Future<void> updateData(
+      String nama, String jumlah, String harga, String id) async {
     final response = await http.put(
       Uri.parse(url),
-      body: jsonEncode(
-          <String, String>{'id': id, 'nama': nama, 'jurusan': jurusan}),
+      body: jsonEncode(<String, String>{
+        'id': id,
+        'nama': nama,
+        'jumlah': jumlah,
+        'harga': harga
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -48,7 +56,7 @@ class _UpdateData extends State<UpdateData> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Edit Mahasiswa'),
+          title: const Text('Edit Barang'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -81,10 +89,24 @@ class _UpdateData extends State<UpdateData> {
               top: 20,
             ),
             child: TextField(
-              controller: _jurusanController,
+              controller: _jumlahController,
               decoration: InputDecoration(
-                  label: Text(widget.jurusan),
-                  hintText: "Jurusan...",
+                  label: Text(widget.jumlah),
+                  hintText: "Jumlah...",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  )),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+            ),
+            child: TextField(
+              controller: _hargaController,
+              decoration: InputDecoration(
+                  label: Text(widget.harga),
+                  hintText: "Harga...",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   )),
@@ -98,7 +120,7 @@ class _UpdateData extends State<UpdateData> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    updateData(_namaController.text, _jurusanController.text,
+                    updateData(_namaController.text, _jumlahController.text, _hargaController.text,
                         widget.id);
                   }))
         ]));

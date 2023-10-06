@@ -14,14 +14,15 @@ class TambahData extends StatefulWidget {
 
 class _TambahDataState extends State<TambahData> {
   final namaController = TextEditingController();
-  final jurusanController = TextEditingController();
+  final jumlahController = TextEditingController();
+  final hargaController = TextEditingController();
 
-  Future postData(String nama, String jurusan) async {
+  Future postData(String nama, String jumlah, String harga) async {
     String url = Platform.isAndroid
-      ? 'http://192.168.1.7/belajarflutter/index.php'
-      : 'http://localhost/belajarflutter/index.php';
+      ? 'http://10.98.5.105/uasmobile/index.php'
+      : 'http://localhost/uasmobile/index.php';
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    String jsonBody = '{"nama": "$nama", "jurusan": "$jurusan"}';
+    String jsonBody = '{"nama": "$nama", "jumlah": "$jumlah", "harga" : "$harga"}';
     var response = await http.post(
       Uri.parse(url),
       headers: headers,
@@ -39,7 +40,7 @@ class _TambahDataState extends State<TambahData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Form Mahasiswa'),
+        title: const Text('Form Barang'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -68,9 +69,22 @@ class _TambahDataState extends State<TambahData> {
               top: 20,
             ),
             child: TextField(
-              controller: jurusanController,
+              controller: jumlahController,
               decoration: InputDecoration(
-                  labelText: 'Jurusan',
+                  labelText: 'Jumlah',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  )),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+            ),
+            child: TextField(
+              controller: hargaController,
+              decoration: InputDecoration(
+                  labelText: 'Harga',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   )),
@@ -85,17 +99,15 @@ class _TambahDataState extends State<TambahData> {
               ),
               onPressed: () {
                 String nama = namaController.text;
-                String jurusan = jurusanController.text;
-                // print(nama);
-                postData(nama, jurusan).then((result) {
-                  //print(result['pesan']);
+                String jumlah = jumlahController.text;
+                String harga = hargaController.text;
+                postData(nama, jumlah, harga).then((result) {
                   if (result['pesan'] == 'berhasil') {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          //var namauser2 = namauser;
                           return AlertDialog(
-                            title: const Text('Data berhasil di tambah'),
+                            title: const Text('Data berhasil ditambah'),
                             content: const Text('ok'),
                             actions: [
                               TextButton(

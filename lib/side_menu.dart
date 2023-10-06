@@ -26,8 +26,8 @@ class SideMenu extends StatelessWidget {
         },
       ),
       ListTile(
-        leading: const Icon(Icons.person),
-        title: const Text('Data Mahasiswa'),
+        leading: const Icon(Icons.shopping_bag),
+        title: const Text('Data barang'),
         onTap: () {
           Navigator.pushReplacement(
             context,
