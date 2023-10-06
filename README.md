@@ -11,3 +11,5 @@ id -> int <br>
 nama -> varchar <br>
 jumlah -> int <br>
 harga -> int
+
+link repo backend : https://github.com/rangguy/backend-uts
