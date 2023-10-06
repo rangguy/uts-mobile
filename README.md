@@ -6,8 +6,8 @@
 - assets/image
 
 ## database
-Barang
-id -> int
-nama -> varchar
-jumlah -> int
+Barang <br>
+id -> int <br>
+nama -> varchar <br>
+jumlah -> int <br>
 harga -> int
